@@ -87,7 +87,7 @@ cardGrid cards =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text "Lets see some lands" ]
+        [ h1 [] [ text "MTG land art" ]
         , styled button [] [ onClick (GetLands Forest) ] [ text "Forest" ]
         , styled button [] [ onClick (GetLands Mountain) ] [ text "Mountain" ]
         , styled button [] [ onClick (GetLands Plains) ] [ text "Plains" ]
