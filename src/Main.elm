@@ -8,6 +8,7 @@ import Html.Styled.Events exposing (onClick)
 import Http
 import Scryfall exposing (LandType(..))
 import Html.Styled.Attributes exposing (disabled)
+import Css exposing (marginTop)
 
 
 
@@ -81,9 +82,13 @@ cardRow cards =
     styled div [ displayFlex, justifyContent center ] [] (List.map cardView cards)
 
 
-cardGrid : List Scryfall.Card -> Html msg
-cardGrid cards =
-    styled div [] [] (cards |> chunk 5 |> List.map cardRow)
+loadingRow : Html msg
+loadingRow =
+    styled div [marginTop (px 30)] [] [text "Loading more cards..."]
+
+cardGrid : List Scryfall.Card -> Bool -> Html msg
+cardGrid cards loading =
+    styled div [] [] ((cards |> chunk 5 |> List.map cardRow) ++ (if loading then [loadingRow] else [text ""]))
 
 
 landButton : LandType -> Bool -> Html Msg
@@ -100,7 +105,7 @@ view model =
         , landButton Plains model.loading
         , landButton Island model.loading
         , landButton Swamp model.loading
-        , cardGrid model.cards
+        , cardGrid model.cards model.loading
         ]
 
 
