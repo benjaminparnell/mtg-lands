@@ -7,6 +7,7 @@ import Html.Styled.Attributes exposing (src)
 import Html.Styled.Events exposing (onClick)
 import Http
 import Scryfall exposing (LandType(..))
+import Html.Styled.Attributes exposing (disabled)
 
 
 
@@ -15,12 +16,13 @@ import Scryfall exposing (LandType(..))
 
 type alias Model =
     { cards : List Scryfall.Card
+    , loading : Bool
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { cards = [] }, Cmd.none )
+    ( { cards = [], loading = False }, Cmd.none )
 
 
 
@@ -36,12 +38,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GetLands landType ->
-            ( { model | cards = [] }, Scryfall.getLands landType 1 (GotLands landType 1) )
+            ( { model | cards = [], loading = True }, Scryfall.getLands landType 1 (GotLands landType 1) )
 
         GotLands landType previousPage result ->
             case result of
                 Ok data ->
-                    ( { model | cards = model.cards ++ data.data }
+                    ( { model | cards = model.cards ++ data.data, loading = data.hasMore }
                     , if data.hasMore then
                         Scryfall.getLands landType (previousPage + 1) (GotLands landType (previousPage + 1))
 
@@ -50,7 +52,7 @@ update msg model =
                     )
 
                 Err _ ->
-                    ( model, Cmd.none )
+                    ( { model | loading = False }, Cmd.none )
 
 
 chunk : Int -> List a -> List (List a)
@@ -88,11 +90,11 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "MTG land art" ]
-        , styled button [] [ onClick (GetLands Forest) ] [ text "Forest" ]
-        , styled button [] [ onClick (GetLands Mountain) ] [ text "Mountain" ]
-        , styled button [] [ onClick (GetLands Plains) ] [ text "Plains" ]
-        , styled button [] [ onClick (GetLands Island) ] [ text "Island" ]
-        , styled button [] [ onClick (GetLands Swamp) ] [ text "Swamp" ]
+        , styled button [] [ disabled model.loading, onClick (GetLands Forest) ] [ text "Forest" ]
+        , styled button [] [ disabled model.loading, onClick (GetLands Mountain) ] [ text "Mountain" ]
+        , styled button [] [ disabled model.loading, onClick (GetLands Plains) ] [ text "Plains" ]
+        , styled button [] [ disabled model.loading, onClick (GetLands Island) ] [ text "Island" ]
+        , styled button [] [ disabled model.loading, onClick (GetLands Swamp) ] [ text "Swamp" ]
         , cardGrid model.cards
         ]
 
