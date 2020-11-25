@@ -1,14 +1,12 @@
 module Main exposing (..)
 
 import Browser
-import Css exposing (auto, center, displayFlex, justifyContent, margin2, pct, px, width)
+import Css exposing (auto, center, displayFlex, justifyContent, margin2, marginTop, pct, px, width)
 import Html.Styled exposing (Attribute, Html, button, div, h1, img, styled, text, toUnstyled)
-import Html.Styled.Attributes exposing (src)
+import Html.Styled.Attributes exposing (disabled, src)
 import Html.Styled.Events exposing (onClick)
 import Http
 import Scryfall exposing (LandType(..))
-import Html.Styled.Attributes exposing (disabled)
-import Css exposing (marginTop)
 
 
 
@@ -84,11 +82,22 @@ cardRow cards =
 
 loadingRow : Html msg
 loadingRow =
-    styled div [marginTop (px 30)] [] [text "Loading more cards..."]
+    styled div [ marginTop (px 30) ] [] [ text "Loading more cards..." ]
+
 
 cardGrid : List Scryfall.Card -> Bool -> Html msg
 cardGrid cards loading =
-    styled div [] [] ((cards |> chunk 5 |> List.map cardRow) ++ (if loading then [loadingRow] else [text ""]))
+    styled div
+        []
+        []
+        ((cards |> chunk 5 |> List.map cardRow)
+            ++ (if loading then
+                    [ loadingRow ]
+
+                else
+                    [ text "" ]
+               )
+        )
 
 
 landButton : LandType -> Bool -> Html Msg
