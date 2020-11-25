@@ -1,4 +1,4 @@
-module Scryfall exposing (Card, CardSearchResponse, LandType(..), getLands)
+module Scryfall exposing (Card, CardSearchResponse, LandType(..), getLands, landTypeToString)
 
 import Http
 import Json.Decode exposing (bool, field, int, list, map4, maybe, string)

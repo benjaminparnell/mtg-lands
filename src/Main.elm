@@ -86,15 +86,20 @@ cardGrid cards =
     styled div [] [] (cards |> chunk 5 |> List.map cardRow)
 
 
+landButton : LandType -> Bool -> Html Msg
+landButton landType isDisabled =
+    styled button [] [ disabled isDisabled, onClick (GetLands landType) ] [ text (Scryfall.landTypeToString landType) ]
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "MTG land art" ]
-        , styled button [] [ disabled model.loading, onClick (GetLands Forest) ] [ text "Forest" ]
-        , styled button [] [ disabled model.loading, onClick (GetLands Mountain) ] [ text "Mountain" ]
-        , styled button [] [ disabled model.loading, onClick (GetLands Plains) ] [ text "Plains" ]
-        , styled button [] [ disabled model.loading, onClick (GetLands Island) ] [ text "Island" ]
-        , styled button [] [ disabled model.loading, onClick (GetLands Swamp) ] [ text "Swamp" ]
+        , landButton Forest model.loading
+        , landButton Mountain model.loading
+        , landButton Plains model.loading
+        , landButton Island model.loading
+        , landButton Swamp model.loading
         , cardGrid model.cards
         ]
 
