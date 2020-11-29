@@ -2,11 +2,15 @@ module Main exposing (..)
 
 import Browser
 import Css exposing (auto, center, displayFlex, justifyContent, margin2, marginTop, pct, px, width)
-import Html.Styled exposing (Attribute, Html, button, div, h1, img, styled, text, toUnstyled)
+import Html.Styled exposing (Attribute, Html, button, div, h1, img, styled, text, toUnstyled, p)
 import Html.Styled.Attributes exposing (disabled, src)
 import Html.Styled.Events exposing (onClick)
 import Http
 import Scryfall exposing (LandType(..))
+import Css exposing (flexDirection)
+import Css exposing (column)
+import Css exposing (marginBottom)
+import Html.Styled.Attributes exposing (title)
 
 
 
@@ -70,8 +74,9 @@ chunk size list =
 
 cardView : Scryfall.Card -> Html msg
 cardView card =
-    div []
-        [ img [ src card.image ] []
+    styled div [ displayFlex, flexDirection column ] []
+        [ styled img [ marginBottom (px 10), marginTop (px 10) ] [ src card.image ] []
+        , styled p [ marginTop (px 5), marginBottom (px 5) ] [ title card.setName ] [ text (String.toUpper card.set) ]
         ]
 
 
