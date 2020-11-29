@@ -80,7 +80,10 @@ cardView card =
             []
             []
             [ styled p [ marginTop (px 5), marginBottom (px 5) ] [ title card.setName ] [ text (String.toUpper card.set) ]
-            , a [ href card.purchaseUrls.cardmarket, target "_blank" ] [ text "mkm" ]
+            , if List.member "paper" card.games then 
+                a [ href card.purchaseUrls.cardmarket, target "_blank" ] [ text "mkm" ]
+              else
+                text ""
             ]
         ]
 
