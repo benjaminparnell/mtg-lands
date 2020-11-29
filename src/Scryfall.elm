@@ -1,7 +1,7 @@
 module Scryfall exposing (Card, CardSearchResponse, LandType(..), getLands, landTypeToString)
 
 import Http
-import Json.Decode exposing (bool, field, int, list, map4, map5, maybe, string)
+import Json.Decode exposing (bool, field, int, list, map, map4, map6, maybe, string)
 
 
 type LandType
@@ -12,12 +12,18 @@ type LandType
     | Island
 
 
+type alias PurchaseURLs =
+    { cardmarket : String
+    }
+
+
 type alias Card =
     { id : String
     , name : String
     , set : String
     , setName : String
     , image : String
+    , purchaseUrls : PurchaseURLs
     }
 
 
@@ -48,14 +54,21 @@ landTypeToString landType =
             "Plains"
 
 
+purchaseURIDecoder : Json.Decode.Decoder PurchaseURLs
+purchaseURIDecoder =
+    map PurchaseURLs
+        (field "cardmarket" string)
+
+
 cardDecoder : Json.Decode.Decoder Card
 cardDecoder =
-    map5 Card
+    map6 Card
         (field "id" string)
         (field "name" string)
         (field "set" string)
         (field "set_name" string)
         (field "image_uris" (field "border_crop" string))
+        (field "purchase_uris" purchaseURIDecoder)
 
 
 cardSearchResponseDecoder : Json.Decode.Decoder CardSearchResponse
